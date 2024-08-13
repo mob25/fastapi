@@ -1,7 +1,7 @@
 import databases
 import sqlalchemy
 
-DATABASE_URL = "sqlite:///store.db"
+DATABASE_URL = "sqlite:///database.db"
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
