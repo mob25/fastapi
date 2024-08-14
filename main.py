@@ -11,8 +11,8 @@ app = FastAPI()
 def root():
     return {"Message": "Hello"}
 
-# пользователи
 
+# пользователи
 @app.get("/test_users/{count}")
 async def create_note(count: int):
     for i in range(count):
@@ -48,7 +48,7 @@ async def update_user(user_id: int, new_user: models.UserCreate):
 async def delete_user(user_id: int):
     query = db.users.delete().where(db.users.c.id == user_id)
     await db.database.execute(query)
-    return {'message': 'User deleted'}
+    return {'message': 'Пользователь не найден'}
 
 
 # товары
