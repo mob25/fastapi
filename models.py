@@ -1,11 +1,16 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, validator
+import bcrypt
 
 class UserCreate(BaseModel):
     name: str = Field(max_length=20)
     surname: str = Field(max_length=20)
-    email: str = Field(max_length=30)
+    email: EmailStr
     password: str = Field(min_length=6)
+    @validator('password')
+    def hash_password(cls, password: str) -> str:
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        return hashed.decode('utf-8')
 
 
 class UserRead(UserCreate):
@@ -15,7 +20,7 @@ class UserRead(UserCreate):
 class ProductCreate(BaseModel):
     title: str = Field(max_length=60)
     description: str = Field(max_length=500)
-    price: int = Field(default=0)
+    price: int = Field(gt=0)
 
 
 class ProductRead(ProductCreate):
@@ -26,7 +31,7 @@ class OrderCreate(BaseModel):
     user_id: int
     prod_id: int
     date: datetime = Field(default=datetime.now())
-    status: str = Field(default="Оплачен")
+    status: str = Field(pattern = r"^(Оплачен|Отменен|В процессе)$")
 
 
 class OrderRead(OrderCreate):
